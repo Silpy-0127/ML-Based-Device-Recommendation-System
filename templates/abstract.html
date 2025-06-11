@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sedan+SC&display=swap" rel="stylesheet">
+    <title>Abstract</title>
+    <style>
+    * {
+        margin: 0px;
+    }
+    h1{
+        font-weight: bold;
+        color: black;
+        align-items: center;
+        justify-content: center;
+    }
+    p{
+        font-size: 25px;
+        color: black;
+        margin-bottom: 20px;
+        justify-content:center;
+        padding: 20px 30px;
+        align-items:center;
+        word-spacing: 3px;
+        text-align: justify;
+        font-family: 'Times New Roman', Times, serif;
+    }
+    img{
+        width: 35%;
+        float: left;
+        border: 3px solid black;
+        border-radius: 10px;
+        margin-right: 30px;
+        margin-left: 30px;
+    }
+    body{
+        background-color: white;
+        font-family: "Sedan SC", serif;
+    }
+    .header{
+        display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: dodgerblue;
+  padding: 8px;
+  top: 0;
+  left: 0;
+  width: 100%;
+  position: fixed;
+  z-index: 999;
+    }
+    .menu {
+        text-decoration:none;
+        font-size: 18px;
+        color: whitesmoke;
+        margin-right: 30px;
+    }
+    .menu:hover {
+        color: black;
+    }
+    .container{
+        align-items: center;
+        justify-content: center;
+        margin-top: 20px;
+    }
+    h2{
+        align-items: center;
+        justify-content: center;
+        font-size: 40px;
+        display: flex;
+        padding: 60px;
+    }
+    </style>
+</head>
+<body><div class="header" >
+    <h1>ML - Based Device Recommendation System</h1>
+    <nav>
+     <a class ="menu" href="/">Home</a>
+     <a class ="menu" href="/login">Login</a>
+    </nav>
+</div>
+<div class="container">
+    <h2><u>Abstract on ML - Based Device Recommendation System</u></h2>
+    <br /><br />
+</div>
+<div>
+    <img src="../static/abstract.webp">
+</div>
+<div class="text">
+    <p> 
+        In today’s fast-paced digital marketplace, users are often overwhelmed by the wide range of electronic devices available online. With varying brands, specifications, prices, and features, finding the right device that fits individual needs has become a complex and time-consuming task. To address this issue, we developed a Machine Learning-based Device Recommendation System that intelligently assists users by providing personalized product suggestions based on their preferences and natural language queries.
+
+        The core of the system leverages a pre-trained Sentence-BERT (Bidirectional Encoder Representations from Transformers) model, which transforms both user input and product descriptions into dense semantic embeddings. Using cosine similarity, the system compares these embeddings to identify the most relevant devices from a pre-processed product database. This allows the system to go beyond simple keyword matching and understand the context and intent behind a user’s query—such as “a lightweight laptop for travel” or “an affordable phone with a good camera.”
+        
+        The system is deployed using the Flask web framework, offering an interactive interface where users can submit queries and instantly receive a ranked list of product recommendations, complete with brand, category, similarity scores, and images. This project showcases the integration of state-of-the-art NLP models with practical web technologies to solve real-world e-commerce problems. It enhances the online shopping experience by reducing decision fatigue, improving search relevance, and offering a more intuitive way for users to discover products tailored to their needs.
+        
+        In addition to its practical utility, the recommendation engine is flexible, scalable, and adaptable to other domains beyond electronics. It serves as a strong example of how modern machine learning techniques can bridge the gap between human language and structured product data, ultimately transforming the way consumers interact with online platforms.
+    </p>
+</div>
+</body>
+</html>

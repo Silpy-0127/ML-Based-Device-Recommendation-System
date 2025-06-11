@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sedan+SC&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <style>
+            * {
+        margin: 0px;
+    }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: dodgerblue;
+            padding: 8px;
+        }
+        .menu {
+            text-decoration:none;
+            font-size: 18px;
+            color: whitesmoke;
+            margin-right: 30px;
+        }
+        .menu:hover {
+            color: black;
+        }
+        body {
+            background-image: url("../static/mobile.jpg");
+            background-repeat: no-repeat;
+            background-size: cover;
+            font-family: "Sedan SC", serif;
+            background-attachment: fixed;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+    <h1>Home page</h1>
+    <nav>
+     <a class ="menu" href="/">Home</a>
+     <a class ="menu" href="/login">Login</a>
+     <a class ="menu" href="/abstract">Abstract</a>
+    </nav>
+</div>
+</body>
+</html>

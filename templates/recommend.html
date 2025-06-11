@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sedan+SC&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css">
+    <title>Product Recommendation System</title>
+</head>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    body {
+        min-height: 100vh;
+        background-color: aliceblue;
+        background-size: cover;
+        background-position: center;
+        font-family: "Sedan SC", serif;
+        background-attachment: fixed;
+    }
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: dodgerblue;
+        padding: 8px;
+        top: 0;
+        left: 0;
+        width: 100%;
+        position: fixed;
+        z-index: 999;
+    }
+    .menu {
+        text-decoration: none;
+        font-size: 18px;
+        color: whitesmoke;
+        margin-right: 30px;
+    }
+    .menu:hover {
+        color: black;
+    }
+    .card {
+        box-shadow: 6px 4px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s ease-in-out;
+        background: transparent;
+        border: 4px solid rgba(255, 255, 255, .2);
+        backdrop-filter: blur(9px);
+        color: #0a0a0a;
+        border-radius: 12px;
+        margin-top: 100px;
+        width: 240px;
+        height: auto;
+    }
+    .card-img-top {
+        width: 100%;
+        height: 250px;
+        object-fit: contain;
+        padding: 10px;
+        background-color: white;
+        border-radius: 10px;
+    }
+    .card:hover {
+        transform: scale(1.05);
+    }
+    .input-group {
+        padding-top: 100px;
+    }
+    .card-body {
+        display: flex;
+        flex-direction: column;
+    }
+    .card .btn {
+        white-space: nowrap;
+    }
+    .profile-icon {
+        width: 40px;
+        height: 40px;
+        background-color: #4CAF50;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        margin-right: 15px;
+    }
+</style>
+<body>
+    <div class="header">
+        <h1>ML - Based Device Recommendation System</h1>
+        <nav style="display: flex; align-items: center;">
+            <a class="menu" href="/">Home</a>
+            <a class="menu" href="/abstract">Abstract</a>
+            <a class ="menu" href="/future">Future</a>
+            <a class ="menu" href="/activity">Flow Diagram</a>
+            <div class="dropdown" style="float: right; margin-right: 20px;">
+                <button class="btn btn-secondary dropdown-toggle rounded-circle text-uppercase" type="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="width: 40px; height: 40px; padding: 0;">
+                  {{ first_letter }}
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+                    <li><a class="dropdown-item" href="#" onclick="viewCart()">View Cart</a></li>
+                    <li><a class="dropdown-item" href="#" onclick="saveCartBeforeLogout()">Logout</a></li>
+                </ul>
+              </div>     
+        </nav>
+    </div>
+    <div style="position: fixed; top: 80px; left: 20px; z-index: 1000; display: flex; gap: 10px;">
+        <button onclick="viewCart()" class="btn btn-warning">
+            View Cart
+        </button>
+        <button onclick="clearCart()" class="btn btn-danger">
+            Clear Cart
+        </button>
+    </div>
+    <div class="container my-5">
+        <h1 class="text-center mb-4"></h1>
+        <form method="POST" class="mb-4">
+            <div class="input-group">
+                <input type="text" id="query" class="form-control" name="query" placeholder="Search for a product..." required>
+                <button type="button" class="btn btn-secondary" onclick="startListening()">
+                    🎤
+                </button>
+                <button class="btn btn-primary" type="submit">Search</button>
+            </div>
+        </form>
+
+        {% if recommendations %}
+        <div class="row row-cols-1 row-cols-md-5 g-4">
+            {% for product in recommendations %}
+            <div class="col">
+                <div class="card h-100 p-2">
+                    <img src="{{ product.image[0] if product.image else 'https://via.placeholder.com/150' }}"
+                         class="card-img-top" alt="Product Image">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ product.product }}</h5>
+                        <p class="card-text">
+                            <strong>Product:</strong> {{ product.name }}<br>
+                            <strong>Price:</strong> ₹<span id="price-{{ loop.index }}">{{ product.actual_price }}</span><br>
+                            <strong>Ratings:</strong> {{ product.ratings }}
+                        </p>
+                        <div class="d-flex align-items-center justify-content-between gap-2 mt-auto">
+                            <input type="number" class="form-control text-center" style="width: 60px;" min="1" value="1" id="qty-{{ loop.index }}">
+                            <button class="btn btn-success flex-shrink-0" onclick="addToCart('{{ product.product }}', '{{ loop.index }}')">
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+    <!-- Cart Modal -->
+    <div class="modal fade" id="cartModal" tabindex="-1" aria-labelledby="cartModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="cartModalLabel">🛒 Your Cart</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body" id="cartModalBody"></div>
+          <div class="modal-footer">
+            <h5 class="me-auto" id="cartTotalAmount"></h5>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button class="btn btn-success" onclick="redirectToBill()">Generate Bill</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function startListening() {
+            if (!('webkitSpeechRecognition' in window)) {
+                alert('Your browser does not support speech recognition. Try Chrome.');
+                return;
+            }
+            var recognition = new webkitSpeechRecognition();
+            recognition.lang = 'en-US';
+            recognition.interimResults = false;
+            recognition.maxAlternatives = 1;
+            recognition.start();
+            recognition.onresult = function(event) {
+                var transcript = event.results[0][0].transcript;
+                document.getElementById('query').value = transcript;
+                document.querySelector('form').submit();
+            };
+            recognition.onerror = function(event) {
+                console.error('Speech recognition error', event.error);
+            };
+        }
+
+        function parsePrice(priceStr) {
+            return parseFloat(priceStr.replace(/[^0-9.]/g, ""));
+        }
+
+        function addToCart(productName, index) {
+    const qty = parseInt(document.getElementById(`qty-${index}`).value);
+    const priceStr = document.getElementById(`price-${index}`).innerText;
+    const price = parsePrice(priceStr);
+    const total = qty * price;
+
+    const cartItem = { name: productName, price: price, quantity: qty, total: total };
+    let cart = JSON.parse(sessionStorage.getItem("cart")) || [];
+
+    const existingIndex = cart.findIndex(item => item.name === cartItem.name);
+    if (existingIndex !== -1) {
+        //  Replace with latest quantity and total
+        cart[existingIndex].quantity = qty;
+        cart[existingIndex].total = total;
+    } else {
+        cart.push(cartItem);
+    }
+
+    sessionStorage.setItem("cart", JSON.stringify(cart));
+
+    // Optional: Sync with server
+    fetch("/save_cart", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ cart: JSON.stringify(cart) })
+    });
+
+    alert(`Added "${productName}" to cart.\nQuantity: ${qty}\nTotal Price: ₹${total}`);
+}
+
+        function viewCart() {
+            let cart = JSON.parse(sessionStorage.getItem("cart")) || [];
+            const body = document.getElementById("cartModalBody");
+            const totalDisplay = document.getElementById("cartTotalAmount");
+
+            if (cart.length === 0) {
+                body.innerHTML = "<p>Your cart is empty!</p>";
+                totalDisplay.textContent = "";
+            } else {
+                let html = "";
+                let totalAmount = 0;
+
+                cart.forEach((item, index) => {
+                    html += `
+                        <div class="border-bottom pb-2 mb-2">
+                            <strong>${index + 1}. ${item.name}</strong><br>
+                            Quantity: ${item.quantity}<br>
+                            Unit Price: ₹${item.price}<br>
+                            Total: ₹${item.total}
+                        </div>
+                    `;
+                    totalAmount += item.total;
+                });
+
+                body.innerHTML = html;
+                totalDisplay.textContent = `Total Amount: ₹${totalAmount}`;
+            }
+
+            const cartModal = new bootstrap.Modal(document.getElementById('cartModal'));
+            cartModal.show();
+        }
+
+function clearCart() {
+    // Create confirmation modal
+    const modal = document.createElement('div');
+    modal.id = 'clearCartConfirm';
+    modal.style.position = 'fixed';
+    modal.style.top = '0';
+    modal.style.left = '0';
+    modal.style.width = '100%';
+    modal.style.height = '100%';
+    modal.style.background = 'rgba(0,0,0,0.5)';
+    modal.style.display = 'flex';
+    modal.style.alignItems = 'center';
+    modal.style.justifyContent = 'center';
+    modal.style.zIndex = '9999';
+
+    // Modal content
+    modal.innerHTML = `
+        <div style="background:white; padding: 30px; border-radius: 10px; text-align:center; box-shadow: 0 0 10px rgba(0,0,0,0.3); max-width: 400px;">
+            <h5>Are you sure you want to clear the cart?</h5>
+            <div style="margin-top: 20px;">
+                <button id="confirmYes" class="btn btn-danger me-2">Yes</button>
+                <button id="confirmNo" class="btn btn-secondary">No</button>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    // Yes button clears the cart
+    document.getElementById("confirmYes").onclick = function() {
+        sessionStorage.removeItem("cart");
+        alert("Cart has been cleared.");
+        document.body.removeChild(modal);
+    };
+
+    // No button closes modal
+    document.getElementById("confirmNo").onclick = function() {
+        document.body.removeChild(modal);
+    };
+}
+      
+window.onload = function () {
+    const serverCartJson = '{{ cart_data | tojson | safe }}';
+    try {
+        const serverCart = JSON.parse(serverCartJson);
+        sessionStorage.setItem("cart", JSON.stringify(serverCart));
+    } catch (e) {
+        console.error("Cart parse failed:", e);
+        sessionStorage.setItem("cart", "[]");
+    }
+};
+
+function saveCartBeforeLogout() {
+    const cart = sessionStorage.getItem("cart") || "[]";
+    fetch("/save_cart", {
+        method: "POST",
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ cart: cart })
+    }).then(() => {
+        // Only logout AFTER saving cart
+        window.location.href = "/logout";
+    });
+}
+
+function redirectToBill() {
+    const cart = sessionStorage.getItem("cart") || "[]";
+
+    fetch("/save_cart", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ cart: cart }),
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.text().then(text => { throw new Error(text); });
+        }
+        return response.text();
+    })
+    .then(result => {
+        console.log("Cart sync success:", result);
+        window.location.href = "/bill";
+    })
+    .catch(error => {
+        alert("Failed to generate bill: " + error.message);
+    });
+}
+    </script>
+</body>
+</html>

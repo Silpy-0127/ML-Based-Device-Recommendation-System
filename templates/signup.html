@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sedan+SC&display=swap" rel="stylesheet">
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <title>Register</title>
+  <style>
+    /* Your existing styles (unchanged) */
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{
+      min-height: 100vh;
+      background-image: url("../static/back.jpg");
+      background-size: cover;
+      background-position: center;
+      font-family: "Sedan SC", serif;
+      background-attachment: fixed;
+    }
+    .login-container{width:400px;background:transparent;border:2px solid rgba(255,255,255,.2);backdrop-filter:blur(9px);color:#fff;border-radius:12px;padding:30px 40px;margin-top:100px;}
+    .login-container h1{font-size:32px;text-align:center;margin:50px;}
+    .login-container .input-box{position:relative;width:100%;height:50px;display:flex;margin:30px 0;}
+    .input-box input{width:100%;height:100%;background:transparent;border:none;outline:none;border:2px solid rgba(255,255,255,.2);border-radius:40px;font-size:16px;color:#fff;padding:20px 45px 20px 20px;}
+    .input-box input::placeholder{color:#fff;}
+    .input-box i{position:absolute;right:20px;top:30%;transform:translate(-50%);font-size:20px;}
+    .login-container .btn{width:100%;height:45px;background:#fff;border:none;outline:none;border-radius:40px;box-shadow:0 0 10px rgba(0,0,0,.1);cursor:pointer;font-size:16px;color:black;font-weight:600;}
+    .login-container .btn:hover{color:black;background-color:greenyellow;}
+    .header{display:flex;justify-content:space-between;align-items:center;background-color:dodgerblue;padding:8px;}
+    .menu{text-decoration:none;font-size:18px;color:whitesmoke;margin-right:30px;}
+    .menu:hover{color:black;}
+    .register{padding-bottom:16px;}
+    .flash-message{color:yellow;font-size:14px;text-align:center;margin-top:10px;}
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>ML - Based Device Recommendation System</h1>
+    <nav>
+      <a class="menu" href="/">Home</a>
+      <a class="menu" href="/abstract">Abstract</a>
+    </nav>
+  </div>
+  <center>
+    <div class="login-container">
+      <h1>Register</h1>
+      <form method="POST" action="/signup">
+        <div class="input-box">
+          <input type="text" placeholder="Username" name="username" required>
+          <i class='bx bxs-user'></i>
+        </div>
+        <div class="input-box">
+          <input type="password" placeholder="Password" name="password" required>
+          <i class='bx bxs-lock-alt'></i>
+        </div>
+        <button type="submit" class="btn">Register</button>
+      </form>
+      <br/><br/>
+      <div class="register">
+        Already have an account? <a href="/login">Login</a>
+      </div>
+
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          <div class="flash-message">
+            {% for message in messages %}
+              {{ message }}
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+    </div>
+  </center>
+</body>
+</html>
